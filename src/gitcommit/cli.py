@@ -27,8 +27,8 @@ from gitcommit.tui import (
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="AI 驱动的 git commit message 生成工具",
-        prog="gitcommit",
+        description="TomoriGo，让 Tomori 帮你写 Commit Message",
+        prog="tmrgo",
     )
     parser.add_argument(
         "-p", "--provider",
