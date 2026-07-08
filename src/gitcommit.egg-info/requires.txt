@@ -1,6 +1,0 @@
-rich>=13.0
-questionary>=2.0
-openai>=1.0
-
-[:python_version < "3.11"]
-tomli>=2.0

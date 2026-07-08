@@ -1,9 +1,0 @@
-Metadata-Version: 2.4
-Name: gitcommit
-Version: 0.1.0
-Summary: AI-powered git commit message generator
-Requires-Python: >=3.10
-Requires-Dist: rich>=13.0
-Requires-Dist: questionary>=2.0
-Requires-Dist: openai>=1.0
-Requires-Dist: tomli>=2.0; python_version < "3.11"
