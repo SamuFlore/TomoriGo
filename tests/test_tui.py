@@ -187,15 +187,23 @@ class TestReviewMessage:
             assert action == Action.CANCEL
             assert msg == "feat(foo): add bar"
 
-    def test_returns_edit_action(self):
+    def test_edit_path_calls_text_and_reconfirm(self):
         from gitcommit.tui import review_message, Action
 
         with patch("gitcommit.tui.console"), \
-             patch("questionary.select") as mock_select:
+             patch("questionary.select") as mock_select, \
+             patch("questionary.text") as mock_text, \
+             patch("gitcommit.tui._reconfirm") as mock_reconfirm:
             mock_select.return_value.unsafe_ask.return_value = "edit message"
+            mock_text.return_value.ask.return_value = "edited message"
+            mock_reconfirm.return_value = (Action.COMMIT, "edited message")
+
             action, msg = review_message("feat(foo): add bar")
-            assert action == Action.EDIT
-            assert msg == "feat(foo): add bar"
+
+            mock_text.assert_called_once_with("Edit commit message:", default="feat(foo): add bar")
+            mock_reconfirm.assert_called_once_with("edited message")
+            assert action == Action.COMMIT
+            assert msg == "edited message"
 
     def test_displays_message_in_panel(self):
         from gitcommit.tui import review_message

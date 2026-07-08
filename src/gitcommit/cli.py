@@ -114,6 +114,7 @@ def main() -> None:
         file_summary=stats,
         language=format_cfg.get("language", "zh"),
         max_length=format_cfg.get("max_length", 72),
+        template=format_cfg.get("template", "{{type}}({{scope}}): {{message}}"),
     )
 
     # Interactive loop: generate → review → commit or regenerate

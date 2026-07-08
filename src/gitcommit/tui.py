@@ -89,14 +89,17 @@ def review_message(message: str) -> tuple[Action, str]:
     if choice is None:
         return Action.CANCEL, message
 
-    action_map = {
-        "yes, commit": Action.COMMIT,
-        "edit message": Action.EDIT,
-        "regenerate": Action.REGENERATE,
-        "cancel": Action.CANCEL,
-    }
-
-    return action_map.get(choice, Action.CANCEL), message
+    if choice == "edit message":
+        edited = questionary.text("Edit commit message:", default=message).ask()
+        if edited is None:
+            return Action.CANCEL, message
+        return _reconfirm(edited)
+    elif choice == "regenerate":
+        return Action.REGENERATE, message
+    elif choice == "cancel":
+        return Action.CANCEL, message
+    else:
+        return Action.COMMIT, message
 
 
 def _reconfirm(message: str) -> tuple[Action, str]:
