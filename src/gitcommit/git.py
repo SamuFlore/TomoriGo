@@ -1,6 +1,7 @@
 # src/gitcommit/git.py
 import subprocess
-import sys
+
+UTF8 = {"encoding": "utf-8", "errors": "replace"}
 
 
 class GitError(Exception):
@@ -14,8 +15,8 @@ def _run_git(args: list[str], timeout: int = 10) -> subprocess.CompletedProcess:
         proc = subprocess.run(
             ["git"] + args,
             capture_output=True,
-            text=True,
             timeout=timeout,
+            **UTF8,
         )
     except FileNotFoundError:
         raise GitError("未找到 git 命令，请确认 git 已安装并在 PATH 中")
@@ -40,8 +41,8 @@ def has_staged_changes() -> bool:
         proc = subprocess.run(
             ["git", "diff", "--staged", "--quiet"],
             capture_output=True,
-            text=True,
             timeout=10,
+            **UTF8,
         )
     except FileNotFoundError:
         raise GitError("未找到 git 命令，请确认 git 已安装并在 PATH 中")
@@ -62,7 +63,7 @@ def has_staged_changes() -> bool:
 def get_staged_diff(max_chars: int = 8000) -> str:
     """Get the full staged diff text. Truncates if too long."""
     proc = _run_git(["diff", "--staged"])
-    diff = proc.stdout
+    diff = proc.stdout or ""
     if len(diff) > max_chars:
         diff = diff[:max_chars] + "\n... (diff 过长已截断)"
     return diff
@@ -71,7 +72,7 @@ def get_staged_diff(max_chars: int = 8000) -> str:
 def get_staged_stats() -> str:
     """Get staged changes summary (--stat)."""
     proc = _run_git(["diff", "--staged", "--stat"])
-    return proc.stdout
+    return proc.stdout or ""
 
 
 def commit(message: str) -> None:
@@ -80,9 +81,11 @@ def commit(message: str) -> None:
         subprocess.run(
             ["git", "commit", "-m", message],
             capture_output=True,
-            text=True,
             timeout=30,
             check=True,
+            **UTF8,
         )
     except subprocess.CalledProcessError as e:
         raise GitError((e.stderr or "").strip() or str(e)) from e
+    except FileNotFoundError:
+        raise GitError("未找到 git 命令，请确认 git 已安装并在 PATH 中")

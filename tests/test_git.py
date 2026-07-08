@@ -19,7 +19,8 @@ class TestHasStagedChanges:
             mock_run.assert_called_once_with(
                 ["git", "diff", "--staged", "--quiet"],
                 capture_output=True,
-                text=True,
+                encoding="utf-8",
+                errors="replace",
                 timeout=10,
             )
 
@@ -42,6 +43,7 @@ class TestGetStagedDiff:
         with patch("subprocess.run") as mock_run:
             mock_run.return_value = MagicMock(
                 returncode=0,
+                stderr="",
                 stdout="--- a/foo.py\n+++ b/foo.py\n+print('hello')",
             )
             result = get_staged_diff()
@@ -49,14 +51,15 @@ class TestGetStagedDiff:
             mock_run.assert_called_once_with(
                 ["git", "diff", "--staged"],
                 capture_output=True,
-                text=True,
+                encoding="utf-8",
+                errors="replace",
                 timeout=10,
             )
 
     def test_truncates_long_diff(self):
         long_output = "x" * 9000
         with patch("subprocess.run") as mock_run:
-            mock_run.return_value = MagicMock(returncode=0, stdout=long_output)
+            mock_run.return_value = MagicMock(returncode=0, stderr="", stdout=long_output)
             result = get_staged_diff(max_chars=8000)
             assert len(result) <= 8200
             assert "截断" in result
@@ -67,6 +70,7 @@ class TestGetStagedStats:
         with patch("subprocess.run") as mock_run:
             mock_run.return_value = MagicMock(
                 returncode=0,
+                stderr="",
                 stdout="foo.py | 5 ++++-\n1 file changed, 4 insertions(+), 1 deletion(-)",
             )
             result = get_staged_stats()
@@ -74,13 +78,14 @@ class TestGetStagedStats:
             mock_run.assert_called_once_with(
                 ["git", "diff", "--staged", "--stat"],
                 capture_output=True,
-                text=True,
+                encoding="utf-8",
+                errors="replace",
                 timeout=10,
             )
 
     def test_empty_stats(self):
         with patch("subprocess.run") as mock_run:
-            mock_run.return_value = MagicMock(returncode=0, stdout="")
+            mock_run.return_value = MagicMock(returncode=0, stderr="", stdout="")
             result = get_staged_stats()
             assert result == ""
 
@@ -93,7 +98,8 @@ class TestCommit:
             mock_run.assert_called_once_with(
                 ["git", "commit", "-m", "feat: test"],
                 capture_output=True,
-                text=True,
+                encoding="utf-8",
+                errors="replace",
                 timeout=30,
                 check=True,
             )
@@ -101,7 +107,7 @@ class TestCommit:
     def test_commit_failure_raises_git_error(self):
         with patch("subprocess.run") as mock_run:
             mock_run.side_effect = subprocess.CalledProcessError(
-                1, "git commit", stderr=b"pre-commit hook failed"
+                1, "git commit", stderr="pre-commit hook failed"
             )
             with pytest.raises(GitError, match="pre-commit hook failed"):
                 commit("test")
