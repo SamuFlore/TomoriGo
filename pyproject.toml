@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "gitcommit"
+version = "0.1.0"
+description = "AI-powered git commit message generator"
+requires-python = ">=3.10"
+dependencies = [
+    "rich>=13.0",
+    "questionary>=2.0",
+    "openai>=1.0",
+    "tomli>=2.0; python_version < '3.11'",
+]
+
+[project.scripts]
+gitcommit = "gitcommit.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
