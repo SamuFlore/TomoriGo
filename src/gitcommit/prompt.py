@@ -10,14 +10,13 @@ SYSTEM_PROMPT = """你是一个专业的 commit message 生成助手。
 
 
 NONSENSE_SYSTEM_PROMPT = """你是一个有幽默感的程序员，专门生成搞笑风格的 git commit message。
-根据用户提供的 git diff，生成一行看起来像 Conventional Commits 格式但内容非常幽默的消息。
+根据用户提供的 git diff，生成一行毫无意义的 commit message。遵循以下规则：
 
 规则：
-- 严格遵循格式：type(scope): description
-- type 使用这些有趣的词之一：chaos, meow, cope, vibe, yeet, noodle, galaxybrain, oops
-- scope 根据改动的文件来编一个夸张好笑的描述
-- description 用{language}写，要玩编程梗和程序员笑话
-- description 不超过 {max_length} 字符
+- 没有格式要求
+- 可以生成看似通顺，但毫无意义的文本，比如"会有额外的外来者在场。"这种类型的文本
+- 用{language}写，可以玩编程梗和程序员笑话
+- 不超过 {max_length} 字符
 - 语言要生动有趣但不能冒犯
 - 只返回 commit message 本身，一行，不要任何解释"""
 
