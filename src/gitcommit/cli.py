@@ -76,7 +76,7 @@ def main() -> None:
     parser.add_argument(
         "-l", "--language",
         choices = ["zh", "en"],
-        help="Commit message 语言（覆盖配置文件）",
+        help="Commit message 语言（覆盖配置文件），可选 zh 或 en，默认 zh",
     )
     args = parser.parse_args()
 
