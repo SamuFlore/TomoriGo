@@ -73,6 +73,11 @@ def main() -> None:
         version=f"TomoriGo {_get_version()}",
         help="显示版本信息",
     )
+    parser.add_argument(
+        "-l", "--language",
+        choices = ["zh", "en"],
+        help="Commit message 语言（覆盖配置文件）",
+    )
     args = parser.parse_args()
 
     # Build CLI overrides from args
@@ -87,6 +92,8 @@ def main() -> None:
     format_override = {}
     if args.format:
         format_override["template"] = args.format
+    if args.language:
+        format_override["language"] = args.language
     if format_override:
         cli_overrides["format"] = format_override
 

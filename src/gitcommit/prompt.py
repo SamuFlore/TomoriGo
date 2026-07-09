@@ -72,6 +72,6 @@ def build_nonsense_prompt(
 git diff:
 {diff}
 
-来，给我整一个最离谱的 commit message:"""
+来，给我一个最离谱的 commit message。发挥你的创意生成无意义的废话："""
 
     return system, user

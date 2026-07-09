@@ -14,7 +14,7 @@ def generate_message(
     endpoint: str,
     model: str,
     timeout: float = 15.0,
-    temperature: float = 0.3,
+    temperature: float = 0.4,
 ) -> str:
     """Call the OpenAI-compatible API to generate a commit message.
 
@@ -25,7 +25,7 @@ def generate_message(
         endpoint: Base URL of the API endpoint.
         model: Model name to use.
         timeout: Request timeout in seconds.
-        temperature: Creativity level (0.0-2.0). Default 0.3 for consistency.
+        temperature: Creativity level (0.0-2.0). Default 0.4 for consistency.
 
     Returns:
         The generated commit message string (stripped).
@@ -47,7 +47,7 @@ def generate_message(
                 {"role": "user", "content": user_prompt},
             ],
             temperature=temperature,
-            max_tokens=150,
+            max_tokens=250,
         )
     except APIConnectionError as e:
         raise AIError(f"网络连接失败：{e}") from e

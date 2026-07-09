@@ -49,7 +49,9 @@ model = "" # e.g. deepseek-v4-flash
 endpoint = "" # e.g. https://api.deepseek.com
 
 [format]
-language = "" # e.g. zh
+template = "" # e.g. {{type}}({{scope}}): {{message}}
+max_length = # e.g. 72
+language = "zh" # e.g. zh
 ```
 
 字段说明：
@@ -60,6 +62,8 @@ language = "" # e.g. zh
 |api_key|str|API Key|
 |model|str|模型名|
 |endpoint|str|OpenAI 兼容的 API 地址（base URL）|
+|template|str|Commit message 模版，提供的关键字有：`type`，`scope` 和 `message`|
+|max_length|int|模型生成的最长字符数|
 |language|zh 或 en|Commit message 语言，简体中文或英文|
 
 #### 项目配置

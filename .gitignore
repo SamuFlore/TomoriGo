@@ -8,3 +8,5 @@ build/
 .superpowers/
 .vscode/
 .gitcommit.toml
+
+.DS_Store
