@@ -14,6 +14,7 @@ def generate_message(
     endpoint: str,
     model: str,
     timeout: float = 15.0,
+    temperature: float = 0.3,
 ) -> str:
     """Call the OpenAI-compatible API to generate a commit message.
 
@@ -24,6 +25,7 @@ def generate_message(
         endpoint: Base URL of the API endpoint.
         model: Model name to use.
         timeout: Request timeout in seconds.
+        temperature: Creativity level (0.0-2.0). Default 0.3 for consistency.
 
     Returns:
         The generated commit message string (stripped).
@@ -32,11 +34,9 @@ def generate_message(
         AIError: On missing api_key, network errors, HTTP errors,
                  or empty model response.
     """
-    # Validate api_key
     if not api_key:
         raise AIError("未配置 API key，请在配置文件中设置 provider.api_key")
 
-    # Create client and call API
     client = OpenAI(api_key=api_key, base_url=endpoint, timeout=timeout)
 
     try:
@@ -46,7 +46,7 @@ def generate_message(
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
             ],
-            temperature=0.3,
+            temperature=temperature,
             max_tokens=150,
         )
     except APIConnectionError as e:
@@ -54,7 +54,6 @@ def generate_message(
     except APIStatusError as e:
         raise AIError(f"API 请求失败 (HTTP {e.status_code})：{e.message}") from e
 
-    # Extract and validate content
     content = response.choices[0].message.content
     if content is None or not content.strip():
         raise AIError("AI 返回了空内容，请重试")

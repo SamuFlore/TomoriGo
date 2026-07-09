@@ -16,6 +16,7 @@ class Action(Enum):
     REGENERATE = "regenerate"
     CANCEL = "cancel"
     EDIT = "edit"
+    NONSENSE = "nonsense"  # Randomly generate nonsense commit message
 
 
 def build_diff_table(stats: str) -> Table:
@@ -82,6 +83,7 @@ def review_message(message: str) -> tuple[Action, str]:
             {"name": "Yes, commit", "value": "yes, commit"},
             {"name": "Edit message", "value": "edit message"},
             {"name": "Regenerate", "value": "regenerate"},
+            {"name": "I prefer nonsense", "value": "nonsense"},
             {"name": "Cancel", "value": "cancel"},
         ],
     ).unsafe_ask()
@@ -98,6 +100,8 @@ def review_message(message: str) -> tuple[Action, str]:
         return Action.REGENERATE, message
     elif choice == "cancel":
         return Action.CANCEL, message
+    elif choice == "nonsense":
+        return Action.NONSENSE, message
     else:
         return Action.COMMIT, message
 
@@ -134,6 +138,7 @@ def _reconfirm(message: str) -> tuple[Action, str]:
     action_map = {
         "yes, commit": Action.COMMIT,
         "cancel": Action.CANCEL,
+        "nonsense": Action.NONSENSE,
     }
 
     return action_map.get(choice, Action.CANCEL), message

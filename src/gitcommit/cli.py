@@ -13,7 +13,7 @@ from gitcommit.git import (
     commit,
     GitError,
 )
-from gitcommit.prompt import build_prompt
+from gitcommit.prompt import build_prompt, build_nonsense_prompt
 from gitcommit.ai import generate_message, AIError
 from gitcommit.tui import (
     Action,
@@ -109,13 +109,25 @@ def main() -> None:
     provider_cfg = config["provider"]
     format_cfg = config["format"]
 
-    system_prompt, user_prompt = build_prompt(
-        diff=diff,
-        file_summary=stats,
-        language=format_cfg.get("language", "zh"),
-        max_length=format_cfg.get("max_length", 72),
-        template=format_cfg.get("template", "{{type}}({{scope}}): {{message}}"),
-    )
+    def _make_prompts():
+        return build_prompt(
+            diff=diff,
+            file_summary=stats,
+            language=format_cfg.get("language", "zh"),
+            max_length=format_cfg.get("max_length", 72),
+            template=format_cfg.get("template", "{{type}}({{scope}}): {{message}}"),
+        )
+
+    def _make_nonsense_prompts():
+        return build_nonsense_prompt(
+            diff=diff,
+            file_summary=stats,
+            language=format_cfg.get("language", "zh"),
+            max_length=format_cfg.get("max_length", 72),
+        )
+
+    system_prompt, user_prompt = _make_prompts()
+    temperature = 0.3
 
     # Interactive loop: generate → review → commit or regenerate
     while True:
@@ -126,6 +138,7 @@ def main() -> None:
                 api_key=provider_cfg.get("api_key", ""),
                 endpoint=provider_cfg.get("endpoint", "https://api.openai.com/v1"),
                 model=provider_cfg.get("model", "gpt-4o-mini"),
+                temperature=temperature,
             )
         except AIError as e:
             show_error("AI 调用失败", str(e))
@@ -141,6 +154,10 @@ def main() -> None:
             show_cancelled()
             return
         elif action == Action.REGENERATE:
+            continue
+        elif action == Action.NONSENSE:
+            system_prompt, user_prompt = _make_nonsense_prompts()
+            temperature = 1.2  # 更高温度 = 更有创意（搞笑需要随机性）
             continue
         elif action == Action.COMMIT:
             if args.dry_run:
