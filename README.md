@@ -23,7 +23,7 @@ TomoriGo，让 Tomori 帮你写 Commit message。
 ### 克隆仓库
 
 ```bash
-git clone <repo_url>
+git clone git@github.com:SamuFlore/TomoriGo.git
 cd TomoriGo
 ```
 
@@ -50,7 +50,7 @@ endpoint = "" # e.g. https://api.deepseek.com
 
 [format]
 template = "" # e.g. {{type}}({{scope}}): {{message}}
-max_length = # e.g. 72
+max_length = 72 # e.g. 72
 language = "zh" # e.g. zh
 ```
 
@@ -76,7 +76,7 @@ TOML 文件同上，但放置在项目文件夹中。
 获取帮助：`tmrgo -h`
 
 ```txt
-usage: tmrgo [-h] [-p PROVIDER] [-m MODEL] [-f FORMAT] [-n] [--config]
+usage: tmrgo [-h] [-p PROVIDER] [-m MODEL] [-f FORMAT] [-n] [--config] [-v] [-l {zh,en}]
 
 TomoriGo，让 Tomori 帮你写 Commit Message！
 
@@ -89,6 +89,8 @@ options:
   -n, --dry-run         只生成和展示 message，不执行 git commit
   --config              显示当前生效的配置
   -v, --version         显示版本信息
+  -l, --language {zh,en}
+                        Commit message 语言（覆盖配置文件），可选 zh 或 en，默认 zh
 ```
 
 ### 可选项
