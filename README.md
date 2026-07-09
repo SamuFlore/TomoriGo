@@ -59,7 +59,7 @@ language = "" # e.g. zh
 |name|str|AI Provider 名|
 |api_key|str|API Key|
 |model|str|模型名|
-|endpoint|str|base_URL(**OpenAI 兼容格式**)|
+|endpoint|str|OpenAI 兼容的 API 地址（base URL）|
 |language|zh 或 en|Commit message 语言，简体中文或英文|
 
 #### 项目配置
