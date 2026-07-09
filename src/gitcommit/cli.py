@@ -24,6 +24,21 @@ from gitcommit.tui import (
     show_error,
 )
 
+from pathlib import Path
+
+def _get_version() -> str:
+    """Get version from pyproject.toml"""
+    pyproject = Path(__file__).resolve().parent.parent.parent / "pyproject.toml"
+    if pyproject.exists():
+        try:
+            import tomllib
+        except ImportError:
+            import tomli as tomllib  # Python < 3.11
+        with open(pyproject, "rb") as f:
+            data = tomllib.load(f)
+        return data["project"]["version"]
+    return "unknown"
+
 
 def main() -> None:
     parser = argparse.ArgumentParser(
@@ -51,6 +66,12 @@ def main() -> None:
         "--config",
         action="store_true",
         help="显示当前生效的配置",
+    )
+    parser.add_argument(
+        "-v", "--version",
+        action="version",
+        version=f"TomoriGo {_get_version()}",
+        help="显示版本信息",
     )
     args = parser.parse_args()
 
