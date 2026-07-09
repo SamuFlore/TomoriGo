@@ -84,6 +84,7 @@ options:
   -f, --format FORMAT   自定义 message 格式模板
   -n, --dry-run         只生成和展示 message，不执行 git commit
   --config              显示当前生效的配置
+  -v, --version         显示版本信息
 ```
 
 ### 可选项
