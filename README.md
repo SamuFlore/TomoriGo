@@ -24,7 +24,7 @@ TomoriGo，让 Tomori 帮你写 Commit message。
 
 ```bash
 git clone <repo_url>
-cd tomorigo
+cd TomoriGo
 ```
 
 ### 安装
